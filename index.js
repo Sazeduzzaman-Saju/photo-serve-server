@@ -19,6 +19,7 @@ async function run() {
         const bookingCollection = client.db('photo-serve').collection('booking');
         const reviewCollection = client.db('photo-serve').collection('review');
         const customerCollection = client.db('photo-serve').collection('customerService');
+        const userServiceBookingCollection = client.db('photo-serve').collection('usrServiceBooking');
 
         app.get('/services', async (req, res) => {
             const query = {}
@@ -116,11 +117,34 @@ async function run() {
             const result = await customerCollection.insertOne(userServices)
             res.send(result)
         })
+        app.post('/user-service-booking', async (req, res) => {
+            const usrServiceBooking = req.body;
+            const result = await userServiceBookingCollection.insertOne(usrServiceBooking)
+            res.send(result)
+        })
         app.get('/user-services', async (req, res) => {
             const find = {}
             const cursor = customerCollection.find(find);
             const userServices = await cursor.toArray();
             res.send(userServices)
+        })
+
+        app.get('/user-services/:id', async (req, res) => {
+            const id = req.params.id;
+            const find = { _id: ObjectId(id) }
+            const result = await customerCollection.findOne(find);
+            res.send(result);
+        })
+        app.get('/user-services', async (req, res) => {
+            let query = {}
+            if (req.query._id) {
+                query = {
+                    reviewId: req.query.reviewId
+                }
+            }
+            const cursor = reviewCollection.find(query)
+            const review = await cursor.toArray();
+            res.send(review)
         })
 
     }
