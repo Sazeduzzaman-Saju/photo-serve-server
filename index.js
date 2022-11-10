@@ -21,20 +21,22 @@ async function run() {
         const customerCollection = client.db('photo-serve').collection('customerService');
         const userServiceBookingCollection = client.db('photo-serve').collection('usrServiceBooking');
 
+
+        // get service  Data 
         app.get('/services', async (req, res) => {
             const query = {}
             const cursor = servicesCollection.find(query);
             const services = await cursor.toArray();
             res.send(services);
         })
-
+        // get limited  Data 
         app.get('/services-limit', async (req, res) => {
             const query = {}
             const cursor = servicesCollection.find(query).limit(3);
             const services = await cursor.toArray();
             res.send(services);
         })
-
+        // get service Data with id
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
             const find = { _id: ObjectId(id) }
@@ -120,6 +122,7 @@ async function run() {
             const review = await cursor.toArray();
             res.send(review)
         })
+        // get All review Data With query 
         app.get('/all-review', async (req, res) => {
             let query = {}
             console.log(req.query.email)
@@ -134,19 +137,20 @@ async function run() {
         })
 
 
-
+        // Post user service booking Data 
         app.post('/user-service-booking', async (req, res) => {
             const usrServiceBooking = req.body;
             const result = await userServiceBookingCollection.insertOne(usrServiceBooking)
             res.send(result)
         })
+        // get user service booking Data 
         app.get('/user-service-booking', async (req, res) => {
             const find = {}
             const cursor = userServiceBookingCollection.find(find);
             const usrServiceBooking = await cursor.toArray();
             res.send(usrServiceBooking)
         })
-
+        // get user service booking Data with id
         app.get('/user-service-booking/:id', async (req, res) => {
             const id = req.params.id;
             const find = { _id: ObjectId(id) }
@@ -157,27 +161,27 @@ async function run() {
 
 
 
-
+        // Post user service  Data 
         app.post('/user-services', async (req, res) => {
             const userServices = req.body;
             const result = await customerCollection.insertOne(userServices)
             res.send(result)
         })
-
+        // get user service  Data 
         app.get('/user-services', async (req, res) => {
             const find = {}
             const cursor = customerCollection.find(find);
             const userServices = await cursor.toArray();
             res.send(userServices)
         })
-
+        // get user service  Data with id
         app.get('/user-services/:id', async (req, res) => {
             const id = req.params.id;
             const find = { _id: ObjectId(id) }
             const result = await customerCollection.findOne(find);
             res.send(result);
         })
-
+        // delete user service  Data with id
         app.delete('/user-services/:id', async (req, res) => {
             const id = req.params.id;
             const find = { _id: ObjectId(id) }
@@ -187,7 +191,7 @@ async function run() {
         })
 
 
-        // get review Data With query Id 
+        // get Specific Data With query Id 
         app.get('/specific-data', async (req, res) => {
             let query = {};
             console.log(req.query.email)
