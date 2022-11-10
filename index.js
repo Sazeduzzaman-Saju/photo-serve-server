@@ -71,32 +71,12 @@ async function run() {
             const result = await bookingCollection.deleteOne(find);
             res.send(result);
         })
-
         // Post booking Data
         app.post('/booking', async (req, res) => {
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
             console.log(result)
             res.send(result);
-        })
-        // post review Data
-        app.post('/review', async (req, res) => {
-            const review = req.body;
-            const result = await reviewCollection.insertOne(review)
-            console.log(result);
-            res.send(result)
-        })
-        // get review Data With query Id 
-        app.get('/review', async (req, res) => {
-            let query = {}
-            if (req.query.reviewId) {
-                query = {
-                    reviewId: req.query.reviewId
-                }
-            }
-            const cursor = reviewCollection.find(query)
-            const review = await cursor.toArray();
-            res.send(review)
         })
         // get booking Data With query Id
         app.get('/booking', async (req, res) => {
@@ -112,16 +92,66 @@ async function run() {
             res.send(booking)
         })
 
-        app.post('/user-services', async (req, res) => {
-            const userServices = req.body;
-            const result = await customerCollection.insertOne(userServices)
+
+
+
+        // post review Data
+        app.post('/review', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review)
+            console.log(result);
             res.send(result)
         })
+        app.delete('/review/:id', async (req, res) => {
+            const id = req.params.id;
+            const find = { _id: ObjectId(id) }
+            const result = await reviewCollection.deleteOne(find);
+            res.send(result);
+        })
+        // get review Data With query Id 
+        app.get('/review', async (req, res) => {
+            let query = {}
+            if (req.query.reviewId) {
+                query = {
+                    reviewId: req.query.reviewId
+                }
+            }
+            const cursor = reviewCollection.find(query)
+            const review = await cursor.toArray();
+            res.send(review)
+        })
+
+
+
         app.post('/user-service-booking', async (req, res) => {
             const usrServiceBooking = req.body;
             const result = await userServiceBookingCollection.insertOne(usrServiceBooking)
             res.send(result)
         })
+        app.get('/user-service-booking', async (req, res) => {
+            const find = {}
+            const cursor = userServiceBookingCollection.find(find);
+            const usrServiceBooking = await cursor.toArray();
+            res.send(usrServiceBooking)
+        })
+
+        app.get('/user-service-booking/:id', async (req, res) => {
+            const id = req.params.id;
+            const find = { _id: ObjectId(id) }
+            const result = await userServiceBookingCollection.findOne(find);
+            res.send(result);
+        })
+
+
+
+
+
+        app.post('/user-services', async (req, res) => {
+            const userServices = req.body;
+            const result = await customerCollection.insertOne(userServices)
+            res.send(result)
+        })
+
         app.get('/user-services', async (req, res) => {
             const find = {}
             const cursor = customerCollection.find(find);
@@ -135,17 +165,30 @@ async function run() {
             const result = await customerCollection.findOne(find);
             res.send(result);
         })
-        app.get('/user-services', async (req, res) => {
-            let query = {}
-            if (req.query._id) {
+
+        app.delete('/user-services/:id', async (req, res) => {
+            const id = req.params.id;
+            const find = { _id: ObjectId(id) }
+            const result = await customerCollection.deleteOne(find);
+            console.log(result)
+            res.send(result);
+        })
+
+
+        // get review Data With query Id 
+        app.get('/specific-data', async (req, res) => {
+            let query = {};
+            console.log(req.query.email)
+            if (req.query.email) {
                 query = {
-                    reviewId: req.query.reviewId
+                    email: req.query.email
                 }
             }
-            const cursor = reviewCollection.find(query)
+            const cursor = customerCollection.find(query);
             const review = await cursor.toArray();
-            res.send(review)
+            res.send(review);
         })
+
 
     }
     finally {
